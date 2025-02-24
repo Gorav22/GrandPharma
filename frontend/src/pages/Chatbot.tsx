@@ -164,8 +164,9 @@ const InputArea: React.FC = ({ onSendMessage }) => {
               <i className="fas fa-microphone text-gray-400 hover:text-custom"></i>
             </button>
           </div>
-          <button id="sendButton" className="absolute right-3 top-3 bg-custom text-white p-2 rounded-lg !rounded-button" onClick={handleSendMessage}>
+          <button id="sendButton" className="absolute right-3 top-3 bg-custom text-black p-2 rounded-lg !rounded-button" onClick={handleSendMessage}>
             <i className="fas fa-paper-plane"></i>
+            {/* Send */}
           </button>
         </div>
       </div>
