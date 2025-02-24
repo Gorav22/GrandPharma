@@ -1,6 +1,5 @@
 // The exported code uses Tailwind CSS. Install Tailwind CSS in your dev environment to ensure all styles work.
 import React, { useState, useEffect } from "react";
-import { IoIosSearch } from "react-icons/io";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
 
 // Add global styles for animations
@@ -225,14 +224,10 @@ const Home: React.FC = () => {
             </nav>
           </div>
           <div className="flex items-center space-x-6">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search medicines..."
-                className="w-64 px-4 py-2 rounded-full border border-gray-200 focus:outline-none focus:border-blue-500 text-sm hover:shadow-md transition-shadow duration-300"
-              />
-              <IoIosSearch className="absolute z-4 right-4 top-3 text-gray-400 hover-bounce"/>
-            </div>
+          <div id="languages"><p>
+	<a href="?lang=en" rel="en">English</a> / <a href="?lang=es" rel="es">Spanish</a> / <a href="?lang=it" rel="it">Italian</a> /
+	<a href="?lang=fr" rel="fr">French</a>
+</p></div>
             <SignedOut>
         <SignInButton />
       </SignedOut>

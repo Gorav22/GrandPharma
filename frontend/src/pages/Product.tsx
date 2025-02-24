@@ -83,10 +83,11 @@ const Product: React.FC = () => {
   function handleSearch() {
       const fetchData = async () => {
         try {
+            const a=searchQuery.length>0?searchQuery:'medicine'
           console.log(searchQuery);
           const response = await axios.get('https://real-time-amazon-data.p.rapidapi.com/search', {
             params: {
-              query: 'medicine',
+              query: a,
               page: 1,
               country: 'IN',
               sort_by: 'RELEVANCE',
