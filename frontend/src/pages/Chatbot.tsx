@@ -147,7 +147,6 @@ const InputArea = ({onSendMessage}:any) => {
           </div>
           <button id="sendButton" className="absolute right-3 top-3 bg-custom text-black p-2 rounded-lg !rounded-button" onClick={handleSendMessage}>
             <i className="fas fa-paper-plane"></i>
-            {/* Send */}
           </button>
         </div>
       </div>

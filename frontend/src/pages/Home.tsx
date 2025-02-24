@@ -1,5 +1,6 @@
 // The exported code uses Tailwind CSS. Install Tailwind CSS in your dev environment to ensure all styles work.
 import React, { useState, useEffect } from "react";
+import { IoIosSearch } from "react-icons/io";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
 
 // Add global styles for animations
@@ -224,10 +225,14 @@ const Home: React.FC = () => {
             </nav>
           </div>
           <div className="flex items-center space-x-6">
-          <div id="languages"><p>
-	<a href="?lang=en" rel="en">English</a> / <a href="?lang=es" rel="es">Spanish</a> / <a href="?lang=it" rel="it">Italian</a> /
-	<a href="?lang=fr" rel="fr">French</a>
-</p></div>
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search medicines..."
+                className="w-64 px-4 py-2 rounded-full border border-gray-200 focus:outline-none focus:border-blue-500 text-sm hover:shadow-md transition-shadow duration-300"
+              />
+              <IoIosSearch className="absolute z-4 right-4 top-3 text-gray-400 hover-bounce"/>
+            </div>
             <SignedOut>
         <SignInButton />
       </SignedOut>
@@ -365,28 +370,35 @@ const Home: React.FC = () => {
             Browse by Category
           </h2>
           <div className="grid grid-cols-6 gap-6 animate-fadeInUp">
-            {categories.map((category, index) => {
-              return (
-                <div
-                  key={index}
-                  className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
-                >
-                  <div className="h-40 overflow-hidden">
-                    <img
-                    src={category.name}
-                      alt={category.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-semibold text-lg mb-1">
-                      {category.name}
-                    </h3>
-                    <p className="text-gray-600">{category.count} Products</p>
-                  </div>
-                </div>
-              );
-            })}
+      {categories.map((category, index) => {
+        const imageMap = {
+          "Prescription Medicines": "first.jpeg",
+          "OTC Medicines":"otc.jpg",
+          "Healthcare Products": "healthcared.jpeg",
+          "Personal Care": "personal.jpeg",
+          "Vitamins & Supplements": "vitamins.jpeg",
+          "Medical Devices": "medical.jpeg",
+        };
+
+        return (
+          <div
+            key={index}
+            className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
+          >
+            <div className="h-40 overflow-hidden">
+              <img
+                src={imageMap[category.name  as keyof typeof imageMap] || "first.jpeg"}
+                alt={category.name}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="p-4">
+              <h3 className="font-semibold text-lg mb-1">{category.name}</h3>
+              <p className="text-gray-600">{category.count} Products</p>
+            </div>
+          </div>
+        );
+      })}
           </div>
         </div>
       </div>
