@@ -1,0 +1,64 @@
+// server.js
+const express = require('express');
+const cors = require('cors');
+const connectDB = require('./config/db');
+const dotenv = require('dotenv');
+
+dotenv.config();
+
+const app = express();
+
+connectDB();
+
+const corsOptions = {
+  origin: 'http://localhost:5173',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  allowedHeaders: 'Content-Type,Authorization',
+};
+
+app.use(cors(corsOptions));
+app.use(express.json());
+
+app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/medicines', require('./routes/medicineRoutes'));
+app.use('/api/orders', require('./routes/orderRoutes'));
+app.use('/api/users', require('./routes/userRoutes'));
+
+
+const GEMINI_API_KEY = '';
+const GEMINI_API_URL = 'https://api.gemini.com/v1/chat';
+
+let chatHistory = [];
+
+app.post('/api/chat', async (req, res) => {
+  const { message } = req.body;
+
+  try {
+    const response = await axios.post(
+      GEMINI_API_URL,
+      { message },
+      {
+        headers: {
+          'Authorization': `Bearer ${GEMINI_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    const reply = response.data.reply;
+    chatHistory.push({ user: message, bot: reply });
+    res.json({ reply, history: chatHistory });
+  } catch (error) {
+    console.error('Error calling Gemini API:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/api/history', (req, res) => {
+  res.json(chatHistory);
+});
+
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
