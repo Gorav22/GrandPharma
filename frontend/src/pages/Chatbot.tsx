@@ -168,7 +168,7 @@ const Chatbot: React.FC = () => {
   }, []);
 
   const handleSendMessage = async (message:string) => {
-    const response = await axios.post('http://localhost:5000/api/chat', { message });
+    const response = await axios.post('https://grand-pharma.vercel.app/api/chat', { message });
     setGeminiOutput(response.data.reply);
   };
 

@@ -13,7 +13,7 @@ const app = express();
 connectDB();
 
 const corsOptions = {
-  origin: 'https://grand-pharma-xh8b.vercel.app/',
+  origin: 'https://grand-pharma-xh8b.vercel.app',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   allowedHeaders: 'Content-Type,Authorization',
 };
@@ -27,7 +27,7 @@ app.use('/api/orders', require('./routes/orderRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
 
 const OPENROUTER_API_KEY = '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'; // Replace with your actual API key
-const SITE_URL = 'https://grand-pharma-xh8b.vercel.app/'; // Replace with your actual site URL
+const SITE_URL = 'https://grand-pharma-xh8b.vercel.app'; // Replace with your actual site URL
 const SITE_NAME = 'MedChat Assistant'; // Replace with your site name
 
 let chatHistory = [];
