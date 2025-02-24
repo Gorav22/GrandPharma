@@ -260,9 +260,9 @@ const Home: React.FC = () => {
               products, and expert pharmacist support.
             </p>
             <div className="flex space-x-4">
-              <button className="!rounded-button whitespace-nowrap bg-blue-600 text-white px-8 py-3 text-lg hover:bg-blue-700">
+             <Link to='/product'><button className="!rounded-button whitespace-nowrap bg-blue-600 text-white px-8 py-3 text-lg hover:bg-blue-700">
                 Shop Medicines
-              </button>
+              </button></Link>
               <Link to='/chatbot'><button className="!rounded-button whitespace-nowrap border-2 border-blue-600 text-blue-600 px-8 py-3 text-lg hover:bg-blue-50">
                 Upload Prescription
               </button></Link>
