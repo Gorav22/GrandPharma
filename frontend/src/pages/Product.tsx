@@ -1,31 +1,33 @@
+// The exported code uses Tailwind CSS. Install Tailwind CSS in your dev environment to ensure all styles work.
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Swiper, SwiperSlide } from 'swiper/react';
- import { Autoplay } from 'swiper/modules';
-// import 'swiper/css';
-// import 'swiper/css/pagination';
-// import 'swiper/css/autoplay';
+import { Pagination, Autoplay } from 'swiper/modules';
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
 
-const Product: React.FC = () => {
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/autoplay';
+import axios from 'axios';
+
+const App: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedLocation] = useState('110002');
+  const [selectedLocation, setSelectedLocation] = useState('110002');
   const [cartCount, setCartCount] = useState(0);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
-  const [amazonData, setAmazonData] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   const categories = [
     'Covid Essentials', 'Diabetes', 'Cardiac Care', 'Stomach Care', 'Ayurvedic',
     'Homeopathy', 'Fitness', 'Mom & Baby', 'Devices', 'Surgicals',
     'Sexual Wellness', 'Treatments', 'Skin Care', 'Personal Care'
   ];
+  const [data, setData] = useState([]);
 
   const products = [
     {
       id: 1,
       name: 'FEVERSOL MF Suspension 60ml',
+      image: 'https://public.readdy.ai/ai/img_res/52e0a6991078a38a00166e2a55f02fa2.jpg',
       manufacturer: 'Mkt: Medico Labs Ltd',
       price: 51.75,
       mrp: 57.50,
@@ -35,6 +37,7 @@ const Product: React.FC = () => {
     {
       id: 2,
       name: 'FEVERSOL TH 4 Tablet 10s',
+      image: 'https://public.readdy.ai/ai/img_res/199610eee60b9c5792825274fde33361.jpg',
       manufacturer: 'Mkt: Medico Labs Ltd',
       price: 166.94,
       mrp: 189.70,
@@ -44,6 +47,7 @@ const Product: React.FC = () => {
     {
       id: 3,
       name: 'FEVERSOL MF JUNIOR Oral Suspension 60ml',
+      image: 'https://public.readdy.ai/ai/img_res/811b36901f7d47bda5501823e10d9469.jpg',
       manufacturer: 'Mkt: Medico Labs Ltd',
       price: 54.90,
       mrp: 61.00,
@@ -53,6 +57,7 @@ const Product: React.FC = () => {
     {
       id: 4,
       name: 'Lanol ER 650mg Tablet 10S',
+      image: 'https://public.readdy.ai/ai/img_res/78200dfd10c8389f820dd19e954d3bf1.jpg',
       manufacturer: 'Mkt: Hetero Healthcare Limited',
       price: 20.16,
       mrp: 22.40,
@@ -75,50 +80,118 @@ const Product: React.FC = () => {
       setIsHeaderVisible(currentScrollY < lastScrollY || currentScrollY < 100);
       setLastScrollY(currentScrollY);
     };
+
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('https://real-time-amazon-data.p.rapidapi.com/search', {
+          params: {
+            query: 'medicine',
+            page: 1,
+            country: 'IN',
+            sort_by: 'RELEVANCE',
+            product_condition: 'ALL',
+            is_prime: false,
+            deals_and_discounts: 'NONE'
+          },
+          headers: {
+            // 'x-rapidapi-key': '5a4825e11fmshaa4bd2e72aefccbp129097jsn16e2f89f24b5',
+            'x-rapidapi-key': '163a85a5c0mshfa2fb48df7c4495p17bec0jsn8e95b5e973be',
+            'x-rapidapi-host': 'real-time-amazon-data.p.rapidapi.com'
+          }
+        });
+        const products = response.data.data.products;
+        setData(products);
+        console.log(products);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    
+    fetchData();
+  }, []);
+
+  function handleSearch() {
+      const fetchData = async () => {
+        try {
+          console.log(searchQuery);
+          const response = await axios.get('https://real-time-amazon-data.p.rapidapi.com/search', {
+            params: {
+              query: searchQuery,
+              page: 1,
+              country: 'IN',
+              sort_by: 'RELEVANCE',
+              product_condition: 'ALL',
+              is_prime: false,
+              deals_and_discounts: 'NONE'
+            },
+            headers: {
+              // 'x-rapidapi-key': '5a4825e11fmshaa4bd2e72aefccbp129097jsn16e2f89f24b5',
+              'x-rapidapi-key': '163a85a5c0mshfa2fb48df7c4495p17bec0jsn8e95b5e973be',
+              'x-rapidapi-host': 'real-time-amazon-data.p.rapidapi.com'
+            }
+          });
+          const products = response.data.data.products;
+          setData(products);
+          console.log(products);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
+      fetchData();
+  }
 
   const handleAddToCart = () => {
     setCartCount(prev => prev + 1);
   };
 
-  const fetchAmazonData = async (query: string) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await axios.get('https://real-time-amazon-data.p.rapidapi.com/search', {
-        params: {
-          query: query,
-          page: 1,
-          country: 'US',
-          sort_by: 'RELEVANCE',
-          product_condition: 'ALL',
-          is_prime: false,
-          deals_and_discounts: 'NONE'
-        },
-        headers: {
-          'x-rapidapi-key': '5a4825e11fmshaa4bd2e72aefccbp129097jsn16e2f89f24b5',
-          'x-rapidapi-host': 'real-time-amazon-data.p.rapidapi.com'
-        }
-      });
-      setAmazonData(response.data);
-    } catch (error) {
-      setError(error);
-    } finally {
-      setLoading(false);
+  const extendedProducts = [
+    ...products,
+    {
+      id: 5,
+      name: 'Dolo 650mg Tablet 15s',
+      image: 'https://public.readdy.ai/ai/img_res/b53b9717b6e8ccb48f3ed92834374c1f.jpg',
+      manufacturer: 'Mkt: Micro Labs Ltd',
+      price: 30.71,
+      mrp: 34.90,
+      discount: '12% OFF',
+      category: 'Pain relief'
+    },
+    {
+      id: 6,
+      name: 'Crocin Advance 500mg Tablet 15s',
+      image: 'https://public.readdy.ai/ai/img_res/4c741d6de0cc1a3b3c40ac6a3059c853.jpg',
+      manufacturer: 'Mkt: GlaxoSmithKline Ltd',
+      price: 27.83,
+      mrp: 32.75,
+      discount: '15% OFF',
+      category: 'Pain relief'
+    },
+    {
+      id: 7,
+      name: 'Azithral 500mg Tablet 5s',
+      image: 'https://public.readdy.ai/ai/img_res/420d2e2549c1464ba4103c6d385d94d3.jpg',
+      manufacturer: 'Mkt: Alembic Pharmaceuticals Ltd',
+      price: 82.45,
+      mrp: 97.00,
+      discount: '15% OFF',
+      category: 'Antibiotics'
+    },
+    {
+      id: 8,
+      name: 'Allegra 120mg Tablet 10s',
+      image: 'https://public.readdy.ai/ai/img_res/cc61f6e16d4e36035e42c00dd11f2a57.jpg',
+      manufacturer: 'Mkt: Sanofi India Ltd',
+      price: 108.80,
+      mrp: 136.00,
+      discount: '20% OFF',
+      category: 'Allergy'
     }
-  };
-
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const query = event.target.value;
-    setSearchQuery(query);
-    if (query) {
-      fetchAmazonData(query);
-    } else {
-      setAmazonData(null);
-    }
-  };
+  ];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -141,21 +214,23 @@ const Product: React.FC = () => {
                 </div>
                 <input
                   type="text"
-                  className="flex-1 px-4 py-2 text-sm border-none rounded-r-lg focus:outline-none"
+                  className="text-black flex-1 px-4 py-2 text-sm border-none rounded-r-lg focus:outline-none"
                   placeholder="Search for medicine & wellness products..."
                   value={searchQuery}
-                  onChange={handleSearch}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
-                <button className="px-4 text-sky-500 hover:text-sky-600 transition-colors">
+                <button className="px-4 text-sky-500 hover:text-sky-600 transition-colors" onClick={handleSearch}>
                   <i className="fas fa-search"></i>
                 </button>
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <button className="flex items-center text-sm hover:bg-sky-600 px-4 py-2 rounded-lg transition-colors">
-                <i className="fas fa-user-plus mr-1"></i>
-                Sign Up
-              </button>
+            <SignedOut>
+        <SignInButton />
+      </SignedOut>
+      <SignedIn>
+        <UserButton />
+      </SignedIn>
               <button className="flex items-center text-sm hover:bg-sky-600 px-4 py-2 rounded-lg transition-colors">
                 <i className="fas fa-shopping-cart mr-1"></i>
                 Cart
@@ -257,56 +332,86 @@ const Product: React.FC = () => {
                 ))}
               </div>
             </div>
-            {loading && <div>Loading...</div>}
-            {error && <div>Error: {error.message}</div>}
-            {amazonData ? (
-              <div>
-                <h2 className="text-lg font-semibold mb-4">Amazon Search Results</h2>
-                <pre>{JSON.stringify(amazonData, null, 2)}</pre>
-              </div>
-            ) : (
-              <div className="grid grid-cols-4 gap-6">
-                {products.map((product) => (
-                  <div
-                    key={product.id}
-                    className="bg-white rounded-lg shadow-sm overflow-hidden transform transition-all hover:shadow-lg hover:scale-102"
-                  >
-                    <div className="relative">
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="w-full h-48 object-cover transform transition-transform hover:scale-105"
-                      />
-                      <span className="absolute top-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded">
-                        {product.discount}
-                      </span>
-                      <button className="absolute top-2 right-2 text-gray-400 hover:text-red-500 transition-colors">
-                        <i className="far fa-heart"></i>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {/* {extendedProducts.map((product) => (
+                <div
+                  key={product.id}
+                  className="bg-white rounded-lg shadow-sm overflow-hidden transform transition-all hover:shadow-lg hover:scale-105"
+                >
+                  <div className="relative">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="w-full h-48 object-cover transform transition-transform hover:scale-105"
+                    />
+                    <span className="absolute top-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded">
+                      {product.discount}
+                    </span>
+                    <button className="absolute top-2 right-2 text-gray-400 hover:text-red-500 transition-colors">
+                      <i className="far fa-heart"></i>
+                    </button>
+                  </div>
+                  <div className="p-4">
+                    <div className="text-xs text-sky-500 mb-1">{product.category}</div>
+                    <h3 className="font-medium text-gray-800 mb-1 hover:text-sky-500 transition-colors">
+                      {product.name}
+                    </h3>
+                    <div className="text-sm text-gray-500 mb-2">{product.manufacturer}</div>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-baseline">
+                        <span className="text-lg font-semibold">₹{product.price}</span>
+                        <span className="ml-2 text-sm text-gray-500 line-through">MRP ₹{product.mrp}</span>
+                      </div>
+                      <button
+                        onClick={handleAddToCart}
+                        className="bg-sky-500 text-white px-4 py-2 rounded-lg hover:bg-sky-600 transition-all transform hover:scale-105 active:scale-95 whitespace-nowrap text-sm"
+                      >
+                        ADD
                       </button>
                     </div>
-                    <div className="p-4">
-                      <div className="text-xs text-sky-500 mb-1">{product.category}</div>
-                      <h3 className="font-medium text-gray-800 mb-1 hover:text-sky-500 transition-colors">
-                        {product.name}
-                      </h3>
-                      <div className="text-sm text-gray-500 mb-2">{product.manufacturer}</div>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-baseline">
-                          <span className="text-lg font-semibold">₹{product.price}</span>
-                          <span className="ml-2 text-sm text-gray-500 line-through">MRP ₹{product.mrp}</span>
-                        </div>
-                        <button
-                          onClick={handleAddToCart}
-                          className="bg-sky-500 text-white px-4 py-2 rounded-lg hover:bg-sky-600 transition-all transform hover:scale-102 active:scale-98 !rounded-button whitespace-nowrap text-sm"
-                        >
-                          ADD
-                        </button>
+                  </div>
+                </div>
+              ))} */}
+                {data.length > 0 && (data.map((product) => (
+                <div
+                  key={product.asin}
+                  className="bg-white rounded-lg shadow-sm overflow-hidden transform transition-all hover:shadow-lg hover:scale-105"
+                >
+                  <div className="relative">
+                    <img
+                      src={product.product_photo}
+                      alt={product.product_title}
+                      className="w-full h-48 object-cover transform transition-transform hover:scale-105"
+                    />
+                    <span className="absolute top-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded">
+                      {/* {product.discount} */}
+                    </span>
+                    <button className="absolute top-2 right-2 text-gray-400 hover:text-red-500 transition-colors">
+                      <i className="far fa-heart"></i>
+                    </button>
+                  </div>
+                  <div className="p-4">
+                    <div className="text-xs text-sky-500 mb-1">{product.category}</div>
+                    <h3 className="font-medium text-gray-800 mb-1 hover:text-sky-500 transition-colors">
+                      {product.product_title}
+                    </h3>
+                    {/* <div className="text-sm text-gray-500 mb-2">{product.manufacturer}</div> */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-baseline">
+                        <span className="text-lg font-semibold">{product.product_price}</span>
+                        <span className="ml-2 text-sm text-gray-500 line-through">USD {product.product_price}</span>
                       </div>
+                      <button
+                        onClick={handleAddToCart}
+                        className="bg-sky-500 text-white px-4 py-2 rounded-lg hover:bg-sky-600 transition-all transform hover:scale-105 active:scale-95 whitespace-nowrap text-sm"
+                      >
+                        ADD
+                      </button>
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
+                </div>
+              )))}
+            </div>
           </div>
         </div>
       </main>
@@ -314,4 +419,4 @@ const Product: React.FC = () => {
   );
 };
 
-export default Product;
+export default App;

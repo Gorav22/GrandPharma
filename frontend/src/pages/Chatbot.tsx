@@ -2,18 +2,13 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import '../index.css';
 
-// Sidebar Component
-const Sidebar = () => {
+const Sidebar: React.FC = () => {
   const [history, setHistory] = useState([]);
 
   useEffect(() => {
     const fetchHistory = async () => {
-      try {
-        const response = await axios.get('http://localhost:5000/api/history');
-        setHistory(response.data);
-      } catch (error) {
-        console.error('Error fetching history:', error);
-      }
+      const response = await axios.get('http://localhost:5000/api/history');
+      setHistory(response.data);
     };
 
     fetchHistory();
@@ -37,8 +32,8 @@ const Sidebar = () => {
         <div className="px-3 py-2">
           {history.map((chat, index) => (
             <div key={index} className="mb-4">
-              <div className="text-gray-400">You: {chat?.user}</div>
-              <div className="text-white">Bot: {chat?.bot}</div>
+              <div className="text-gray-400">You: {chat.user}</div>
+              <div className="text-white">Bot: {chat.bot}</div>
             </div>
           ))}
         </div>
@@ -53,8 +48,7 @@ const Sidebar = () => {
   );
 };
 
-// Header Component
-const Header = () => {
+const Header: React.FC = () => {
   return (
     <header className="bg-white border-b border-gray-200 px-6 py-4">
       <div className="flex items-center justify-between">
@@ -78,8 +72,7 @@ const Header = () => {
   );
 };
 
-// ChatContent Component
-const ChatContent = ( geminiOutput: string ) => {
+const ChatContent: React.FC = ({ geminiOutput }) => {
   return (
     <div className="flex-1 overflow-y-auto p-6">
       <div className="max-w-3xl mx-auto">
@@ -127,24 +120,18 @@ const ChatContent = ( geminiOutput: string ) => {
           <button className="text-gray-600 hover:text-custom px-4 py-2">Doctors</button>
           <button className="text-gray-600 hover:text-custom px-4 py-2">Reports</button>
         </div>
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mb-8">
-          <h2 className="font-semibold mb-4">Gemini Output</h2>
-          <p className="text-gray-600">{geminiOutput}</p>
-        </div>
+        <p className="text-gray-600">{geminiOutput}</p>
       </div>
     </div>
   );
 };
 
-// InputArea Component
-const InputArea = ( onSendMessage:any) => {
+const InputArea: React.FC = ({ onSendMessage }) => {
   const [message, setMessage] = useState('');
 
   const handleSendMessage = async () => {
-    if (message.trim()) {
-      await onSendMessage(message);
-      setMessage('');
-    }
+    await onSendMessage(message);
+    setMessage('');
   };
 
   const handleVoiceInput = () => {
@@ -186,30 +173,21 @@ const InputArea = ( onSendMessage:any) => {
   );
 };
 
-// Chatbot Component
-const Chatbot = () => {
+const Chatbot: React.FC = () => {
   const [geminiOutput, setGeminiOutput] = useState('');
 
   useEffect(() => {
     const fetchGeminiOutput = async () => {
-      try {
-        const response = await axios.get('http://localhost:5000/api/gemini');
-        setGeminiOutput(response.data.output);
-      } catch (error) {
-        console.error('Error fetching Gemini output:', error);
-      }
+      const response = await axios.get('http://localhost:5000/api/gemini');
+      setGeminiOutput(response.data.output);
     };
 
     fetchGeminiOutput();
   }, []);
 
   const handleSendMessage = async (message) => {
-    try {
-      const response = await axios.post('http://localhost:5000/api/chat', { message });
-      setGeminiOutput(response.data.reply);
-    } catch (error) {
-      console.error('Error sending message:', error);
-    }
+    const response = await axios.post('http://localhost:5000/api/chat', { message });
+    setGeminiOutput(response.data.reply);
   };
 
   return (
