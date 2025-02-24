@@ -3,16 +3,7 @@ import axios from 'axios';
 import '../index.css';
 
 const Sidebar: React.FC = () => {
-  const [history, setHistory] = useState([]);
-
-  useEffect(() => {
-    const fetchHistory = async () => {
-      const response = await axios.get('http://localhost:5000/api/history');
-      setHistory(response.data);
-    };
-
-    fetchHistory();
-  }, []);
+  
 
   return (
     <div className="w-80 bg-gray-900 text-white flex flex-col">
@@ -28,16 +19,6 @@ const Sidebar: React.FC = () => {
           <i className="fas fa-search absolute left-3 top-3 text-black"></i>
         </div>
       </div>
-      <nav className="flex-1 overflow-y-auto">
-        <div className="px-3 py-2">
-          {history.map((chat, index) => (
-            <div key={index} className="mb-4">
-              <div className="text-gray-400">You: {chat.user}</div>
-              <div className="text-white">Bot: {chat.bot}</div>
-            </div>
-          ))}
-        </div>
-      </nav>
       <div className="p-4">
         <button id="newChatButton" className="flex items-center gap-2 bg-custom text-white px-4 py-2 rounded-lg w-full !rounded-button">
           <i className="fas fa-plus"></i>
@@ -72,7 +53,7 @@ const Header: React.FC = () => {
   );
 };
 
-const ChatContent: React.FC = ({ geminiOutput }) => {
+const ChatContent= ({geminiOutput}:any) => {
   return (
     <div className="flex-1 overflow-y-auto p-6">
       <div className="max-w-3xl mx-auto">
@@ -126,7 +107,7 @@ const ChatContent: React.FC = ({ geminiOutput }) => {
   );
 };
 
-const InputArea: React.FC = ({ onSendMessage }) => {
+const InputArea = ({onSendMessage}:any) => {
   const [message, setMessage] = useState('');
 
   const handleSendMessage = async () => {
@@ -186,7 +167,7 @@ const Chatbot: React.FC = () => {
     fetchGeminiOutput();
   }, []);
 
-  const handleSendMessage = async (message) => {
+  const handleSendMessage = async (message:string) => {
     const response = await axios.post('http://localhost:5000/api/chat', { message });
     setGeminiOutput(response.data.reply);
   };

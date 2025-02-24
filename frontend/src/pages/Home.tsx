@@ -371,20 +371,6 @@ const Home: React.FC = () => {
           </h2>
           <div className="grid grid-cols-6 gap-6 animate-fadeInUp">
             {categories.map((category, index) => {
-              const imageQueries = {
-                "drugs.jpg":
-                  "professional product photography of prescription medicine bottles and pills arranged on clean white surface modern pharmaceutical display premium lighting",
-                "OTC Medicines":
-                  "collection of over the counter medicine packages and tablets professionally arranged on white surface clean medical product photography",
-                "Healthcare Products":
-                  "assorted healthcare products including bandages thermometers and first aid supplies professionally arranged on white surface",
-                "Personal Care":
-                  "luxury personal care products including moisturizers serums and cleansers arranged elegantly on white surface premium cosmetic photography",
-                "Vitamins & Supplements":
-                  "premium vitamin and supplement bottles with natural ingredients professional product photography on white surface wellness products",
-                "Medical Devices":
-                  "modern medical devices including blood pressure monitor glucose meter and digital thermometer professional healthcare equipment photography",
-              };
               return (
                 <div
                   key={index}
