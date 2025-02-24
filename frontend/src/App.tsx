@@ -3,15 +3,15 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Chatbot from './pages/Chatbot'
 import './index.css'
-import Signin from "./pages/Signin";
+import VideoConference from "./pages/VideoConference";
 
 const App: React.FC = () => {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/signin" element={<Signin />} />
         <Route path="/chatbot" element={<Chatbot/>}/>
+        <Route path="/video" element={<VideoConference/>}/>
       </Routes>
     </Router>
   );

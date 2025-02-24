@@ -1,7 +1,8 @@
 // The exported code uses Tailwind CSS. Install Tailwind CSS in your dev environment to ensure all styles work.
 import React, { useState, useEffect } from "react";
 import { IoIosSearch } from "react-icons/io";
-import { FaComments } from "react-icons/fa6";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
+
 // Add global styles for animations
 const style = document.createElement("style");
 style.textContent = `
@@ -123,6 +124,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { Pagination, Autoplay } from "swiper/modules";
 import * as echarts from "echarts";
+import { Link } from "react-router-dom";
 const Home: React.FC = () => {
   const [isNewsletterOpen, setIsNewsletterOpen] = useState<boolean>(false);
   const [isChatOpen, setIsChatOpen] = useState<boolean>(false);
@@ -234,9 +236,12 @@ const Home: React.FC = () => {
               />
               <IoIosSearch className="absolute z-4 right-4 top-3 text-gray-400 hover-bounce"/>
             </div>
-            <button className="!rounded-button whitespace-nowrap bg-blue-600 text-white px-6 py-2 hover:bg-blue-700 hover-scale">
-              Sign In
-            </button>
+            <SignedOut>
+        <SignInButton />
+      </SignedOut>
+      <SignedIn>
+        <UserButton />
+      </SignedIn>
             <div className="relative cursor-pointer hover-bounce">
               <i className="fas fa-shopping-cart text-xl text-gray-600"></i>
               <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center animate-pulse">
@@ -261,9 +266,9 @@ const Home: React.FC = () => {
               <button className="!rounded-button whitespace-nowrap bg-blue-600 text-white px-8 py-3 text-lg hover:bg-blue-700">
                 Shop Medicines
               </button>
-              <button className="!rounded-button whitespace-nowrap border-2 border-blue-600 text-blue-600 px-8 py-3 text-lg hover:bg-blue-50">
+              <Link to='/chatbot'><button className="!rounded-button whitespace-nowrap border-2 border-blue-600 text-blue-600 px-8 py-3 text-lg hover:bg-blue-50">
                 Upload Prescription
-              </button>
+              </button></Link>
             </div>
             <div className="flex items-center mt-12 space-x-8">
               <img
@@ -279,7 +284,7 @@ const Home: React.FC = () => {
               
             </div>
           </div>
-          <div className="w-1/2 animate-slideInRight">
+          <div className="w-1/2 z-[1] animate-slideInRight">
             <Swiper
               modules={[Pagination, Autoplay]}
               pagination={{ clickable: true }}
@@ -291,35 +296,35 @@ const Home: React.FC = () => {
                 <img
                   src="https://public.readdy.ai/ai/img_res/60627c42d7e170913bbbf3ec20de7105.jpg"
                   alt="Modern Pharmacy"
-                  className="w-full h-full object-cover"
+                  className="w-full z-[-9999] h-full object-cover"
                 />
               </SwiperSlide>
               <SwiperSlide>
                 <img
                   src="https://public.readdy.ai/ai/img_res/874179d46787bd7a5e67f32fc7f19f56.jpg"
                   alt="Medical Laboratory"
-                  className="w-full h-full object-cover"
+                  className="w-full z-[-9999] h-full object-cover"
                 />
               </SwiperSlide>
               <SwiperSlide>
                 <img
                   src="https://public.readdy.ai/ai/img_res/c0bec052fcc95bdfb9c9530b370340cd.jpg"
                   alt="Pharmaceutical Warehouse"
-                  className="w-full h-full object-cover"
+                  className="w-full z-[-9999] h-full object-cover"
                 />
               </SwiperSlide>
               <SwiperSlide>
                 <img
                   src="https://public.readdy.ai/ai/img_res/7830281d49fe09a6c148397a0d7762f2.jpg"
                   alt="Telemedicine Consultation"
-                  className="w-full h-full object-cover"
+                  className="w-full z-[-9999] h-full object-cover"
                 />
               </SwiperSlide>
               <SwiperSlide>
                 <img
                   src="https://public.readdy.ai/ai/img_res/668c0003fdba55495c9c763af2c9cafc.jpg"
                   alt="Pharmaceutical Research"
-                  className="w-full h-full object-cover"
+                  className="w-full z-[-9999] h-full object-cover"
                 />
               </SwiperSlide>
             </Swiper>
@@ -583,14 +588,16 @@ const Home: React.FC = () => {
         </div>
       </footer>
       {/* Floating Chat Button */}
-      <button
-        onClick={() => setIsChatOpen(!isChatOpen)}
-        className="!rounded-button whitespace-nowrap fixed bottom-8 right-8 bg-blue-600 text-white w-16 h-16 rounded-full shadow-lg flex items-center justify-center hover:bg-blue-700 transition-transform duration-300 hover:scale-110 animate-bounce"
-      >
-        <i
-          className={`fas ${isChatOpen ? "fa-times" : "fa-comments"} text-2xl`}
-        ></i>
-      </button>
+      <Link to='/chatbot'><button
+  onClick={() => setIsChatOpen(!isChatOpen)}
+  className="!rounded-button whitespace-nowrap fixed bottom-8 right-8 z-[9999] bg-blue-600 text-white w-16 h-16 rounded-full shadow-lg flex items-center justify-center hover:bg-blue-700 transition-transform duration-300 hover:scale-110 animate-bounce"
+>
+  <i
+    className={`fas ${isChatOpen ? "fa-times" : "fa-comments"} text-2xl`}
+  ></i>
+</button></Link>
+
+
       {/* Chat Window */}
       {isChatOpen && (
         <div className="fixed bottom-28 right-8 w-96 bg-white rounded-lg shadow-xl">
