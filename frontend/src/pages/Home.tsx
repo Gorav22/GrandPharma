@@ -123,7 +123,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import { Pagination, Autoplay } from "swiper/modules";
-import * as echarts from "echarts";
 import { Link } from "react-router-dom";
 const Home: React.FC = () => {
   const [isNewsletterOpen, setIsNewsletterOpen] = useState<boolean>(false);
