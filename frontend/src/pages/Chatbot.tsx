@@ -25,7 +25,7 @@ const Sidebar: React.FC = () => {
       <div className="p-4">
         <div className="relative">
           <input type="text" id="searchInput" placeholder="Search" className="w-full bg-gray-800 text-white px-4 py-2 rounded-lg pl-10" />
-          <i className="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+          <i className="fas fa-search absolute left-3 top-3 text-black"></i>
         </div>
       </div>
       <nav className="flex-1 overflow-y-auto">
