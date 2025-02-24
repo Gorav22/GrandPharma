@@ -160,7 +160,7 @@ const Chatbot: React.FC = () => {
 
   useEffect(() => {
     const fetchGeminiOutput = async () => {
-      const response = await axios.get('http://localhost:5000/api/gemini');
+      const response = await axios.get('https://grand-pharma.vercel.app/api/gemini');
       setGeminiOutput(response.data.output);
     };
 
