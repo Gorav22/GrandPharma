@@ -1,17 +1,24 @@
 // The exported code uses Tailwind CSS. Install Tailwind CSS in your dev environment to ensure all styles work.
 import React, { useState, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination, Autoplay } from 'swiper/modules';
+import { Autoplay } from 'swiper/modules';
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
 
-import 'swiper/css';
-import 'swiper/css/pagination';
-import 'swiper/css/autoplay';
 import axios from 'axios';
 
-const App: React.FC = () => {
+interface ProductData {
+    asin?: string;
+    product_title?: string;
+    product_photo?: string;
+    product_price?: string;
+    category?: string;
+    // Add other properties as needed
+  }
+
+
+const Product: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedLocation, setSelectedLocation] = useState('110002');
+//   const [selectedLocation, setSelectedLocation] = useState('110002');
   const [cartCount, setCartCount] = useState(0);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -21,50 +28,9 @@ const App: React.FC = () => {
     'Homeopathy', 'Fitness', 'Mom & Baby', 'Devices', 'Surgicals',
     'Sexual Wellness', 'Treatments', 'Skin Care', 'Personal Care'
   ];
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<ProductData[]>([]);
 
-  const products = [
-    {
-      id: 1,
-      name: 'FEVERSOL MF Suspension 60ml',
-      image: 'https://public.readdy.ai/ai/img_res/52e0a6991078a38a00166e2a55f02fa2.jpg',
-      manufacturer: 'Mkt: Medico Labs Ltd',
-      price: 51.75,
-      mrp: 57.50,
-      discount: '10% OFF',
-      category: 'Pain relief'
-    },
-    {
-      id: 2,
-      name: 'FEVERSOL TH 4 Tablet 10s',
-      image: 'https://public.readdy.ai/ai/img_res/199610eee60b9c5792825274fde33361.jpg',
-      manufacturer: 'Mkt: Medico Labs Ltd',
-      price: 166.94,
-      mrp: 189.70,
-      discount: '12% OFF',
-      category: 'Pain relief'
-    },
-    {
-      id: 3,
-      name: 'FEVERSOL MF JUNIOR Oral Suspension 60ml',
-      image: 'https://public.readdy.ai/ai/img_res/811b36901f7d47bda5501823e10d9469.jpg',
-      manufacturer: 'Mkt: Medico Labs Ltd',
-      price: 54.90,
-      mrp: 61.00,
-      discount: '10% OFF',
-      category: 'Pain relief'
-    },
-    {
-      id: 4,
-      name: 'Lanol ER 650mg Tablet 10S',
-      image: 'https://public.readdy.ai/ai/img_res/78200dfd10c8389f820dd19e954d3bf1.jpg',
-      manufacturer: 'Mkt: Hetero Healthcare Limited',
-      price: 20.16,
-      mrp: 22.40,
-      discount: '10% OFF',
-      category: 'Pain relief'
-    }
-  ];
+  
 
   const manufacturers = [
     { name: 'Eris Lifesciences Ltd', count: 7 },
@@ -99,19 +65,18 @@ const App: React.FC = () => {
             deals_and_discounts: 'NONE'
           },
           headers: {
-            // 'x-rapidapi-key': '5a4825e11fmshaa4bd2e72aefccbp129097jsn16e2f89f24b5',
             'x-rapidapi-key': '163a85a5c0mshfa2fb48df7c4495p17bec0jsn8e95b5e973be',
             'x-rapidapi-host': 'real-time-amazon-data.p.rapidapi.com'
           }
         });
-        const products = response.data.data.products;
+        const products: ProductData[] = response.data.data.products;
         setData(products);
         console.log(products);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
-    
+
     fetchData();
   }, []);
 
@@ -121,7 +86,7 @@ const App: React.FC = () => {
           console.log(searchQuery);
           const response = await axios.get('https://real-time-amazon-data.p.rapidapi.com/search', {
             params: {
-              query: searchQuery,
+              query: 'medicine',
               page: 1,
               country: 'IN',
               sort_by: 'RELEVANCE',
@@ -149,50 +114,6 @@ const App: React.FC = () => {
     setCartCount(prev => prev + 1);
   };
 
-  const extendedProducts = [
-    ...products,
-    {
-      id: 5,
-      name: 'Dolo 650mg Tablet 15s',
-      image: 'https://public.readdy.ai/ai/img_res/b53b9717b6e8ccb48f3ed92834374c1f.jpg',
-      manufacturer: 'Mkt: Micro Labs Ltd',
-      price: 30.71,
-      mrp: 34.90,
-      discount: '12% OFF',
-      category: 'Pain relief'
-    },
-    {
-      id: 6,
-      name: 'Crocin Advance 500mg Tablet 15s',
-      image: 'https://public.readdy.ai/ai/img_res/4c741d6de0cc1a3b3c40ac6a3059c853.jpg',
-      manufacturer: 'Mkt: GlaxoSmithKline Ltd',
-      price: 27.83,
-      mrp: 32.75,
-      discount: '15% OFF',
-      category: 'Pain relief'
-    },
-    {
-      id: 7,
-      name: 'Azithral 500mg Tablet 5s',
-      image: 'https://public.readdy.ai/ai/img_res/420d2e2549c1464ba4103c6d385d94d3.jpg',
-      manufacturer: 'Mkt: Alembic Pharmaceuticals Ltd',
-      price: 82.45,
-      mrp: 97.00,
-      discount: '15% OFF',
-      category: 'Antibiotics'
-    },
-    {
-      id: 8,
-      name: 'Allegra 120mg Tablet 10s',
-      image: 'https://public.readdy.ai/ai/img_res/cc61f6e16d4e36035e42c00dd11f2a57.jpg',
-      manufacturer: 'Mkt: Sanofi India Ltd',
-      price: 108.80,
-      mrp: 136.00,
-      discount: '20% OFF',
-      category: 'Allergy'
-    }
-  ];
-
   return (
     <div className="min-h-screen bg-gray-50">
       <header
@@ -209,7 +130,7 @@ const App: React.FC = () => {
             <div className="flex-1 max-w-4xl mx-8">
               <div className="flex bg-white rounded-lg transform transition-all hover:shadow-lg">
                 <div className="flex items-center px-3 border-r border-gray-200 cursor-pointer hover:bg-gray-50">
-                  <span className="text-gray-700 text-sm whitespace-nowrap">Deliver to {selectedLocation}</span>
+                  <span className="text-gray-700 text-sm whitespace-nowrap">Deliver to 110002</span>
                   <i className="fas fa-chevron-down ml-2 text-gray-500"></i>
                 </div>
                 <input
@@ -379,12 +300,11 @@ const App: React.FC = () => {
                 >
                   <div className="relative">
                     <img
-                      src={product.product_photo}
-                      alt={product.product_title}
+                      src={product?.product_photo }
+                      alt={product?.product_title }
                       className="w-full h-48 object-cover transform transition-transform hover:scale-105"
                     />
                     <span className="absolute top-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded">
-                      {/* {product.discount} */}
                     </span>
                     <button className="absolute top-2 right-2 text-gray-400 hover:text-red-500 transition-colors">
                       <i className="far fa-heart"></i>
@@ -419,4 +339,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+export default Product;

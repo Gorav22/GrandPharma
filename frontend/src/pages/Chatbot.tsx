@@ -21,6 +21,7 @@ interface ChatResponse {
 
 // Sidebar Component
 const Sidebar: React.FC = () => {
+<<<<<<< HEAD
   const [history, setHistory] = useState<Chat[]>([]);
 
   useEffect(() => {
@@ -35,6 +36,9 @@ const Sidebar: React.FC = () => {
 
     fetchHistory();
   }, []);
+=======
+  
+>>>>>>> 6d2615e900e8c36e124e606e538f7517ae51bb0a
 
   return (
     <div className="w-80 bg-gray-900 text-white flex flex-col">
@@ -47,9 +51,10 @@ const Sidebar: React.FC = () => {
       <div className="p-4">
         <div className="relative">
           <input type="text" id="searchInput" placeholder="Search" className="w-full bg-gray-800 text-white px-4 py-2 rounded-lg pl-10" />
-          <i className="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+          <i className="fas fa-search absolute left-3 top-3 text-black"></i>
         </div>
       </div>
+<<<<<<< HEAD
       <nav className="flex-1 overflow-y-auto">
         <div className="px-3 py-2">
           {history.map((chat, index) => (
@@ -61,6 +66,8 @@ const Sidebar: React.FC = () => {
           ))}
         </div>
       </nav>
+=======
+>>>>>>> 6d2615e900e8c36e124e606e538f7517ae51bb0a
       <div className="p-4">
         <button id="newChatButton" className="flex items-center gap-2 bg-custom text-white px-4 py-2 rounded-lg w-full !rounded-button">
           <i className="fas fa-plus"></i>
@@ -96,12 +103,16 @@ const Header: React.FC = () => {
   );
 };
 
+<<<<<<< HEAD
 // ChatContent Component
 interface ChatContentProps {
   geminiOutput: string;
 }
 
 const ChatContent: React.FC<ChatContentProps> = ({ geminiOutput }) => {
+=======
+const ChatContent= ({geminiOutput}:any) => {
+>>>>>>> 6d2615e900e8c36e124e606e538f7517ae51bb0a
   return (
     <div className="flex-1 overflow-y-auto p-6">
       <div className="max-w-3xl mx-auto">
@@ -158,12 +169,16 @@ const ChatContent: React.FC<ChatContentProps> = ({ geminiOutput }) => {
   );
 };
 
+<<<<<<< HEAD
 // InputArea Component
 interface InputAreaProps {
   onSendMessage: (message: string) => Promise<void>;
 }
 
 const InputArea: React.FC<InputAreaProps> = ({ onSendMessage }) => {
+=======
+const InputArea = ({onSendMessage}:any) => {
+>>>>>>> 6d2615e900e8c36e124e606e538f7517ae51bb0a
   const [message, setMessage] = useState('');
 
   const handleSendMessage = async () => {
@@ -224,17 +239,23 @@ const Chatbot: React.FC = () => {
 
   useEffect(() => {
     const fetchGeminiOutput = async () => {
+<<<<<<< HEAD
       try {
         const response = await axios.get<GeminiOutput>('http://localhost:5000/api/gemini');
         setGeminiOutput(response.data.output);
       } catch (error) {
         console.error('Error fetching Gemini output:', error);
       }
+=======
+      const response = await axios.get('https://grand-pharma.vercel.app/api/gemini');
+      setGeminiOutput(response.data.output);
+>>>>>>> 6d2615e900e8c36e124e606e538f7517ae51bb0a
     };
 
     fetchGeminiOutput();
   }, []);
 
+<<<<<<< HEAD
   const handleSendMessage = async (message: string) => {
     try {
       const response = await axios.post<ChatResponse>('http://localhost:5000/api/chat', { message });
@@ -242,6 +263,11 @@ const Chatbot: React.FC = () => {
     } catch (error) {
       console.error('Error sending message:', error);
     }
+=======
+  const handleSendMessage = async (message:string) => {
+    const response = await axios.post('https://grand-pharma.vercel.app/api/chat', { message });
+    setGeminiOutput(response.data.reply);
+>>>>>>> 6d2615e900e8c36e124e606e538f7517ae51bb0a
   };
 
   return (
