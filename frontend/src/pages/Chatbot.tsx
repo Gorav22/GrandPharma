@@ -34,6 +34,7 @@ const Sidebar: React.FC = () => {
             <div key={index} className="mb-4">
               <div className="text-gray-400">You: {chat.user}</div>
               <div className="text-white">Bot: {chat.bot}</div>
+              <div className="text-gray-500 text-xs">{new Date(chat.timestamp).toLocaleString()}</div>
             </div>
           ))}
         </div>
@@ -72,7 +73,7 @@ const Header: React.FC = () => {
   );
 };
 
-const ChatContent: React.FC = () => {
+const ChatContent: React.FC = ({ geminiOutput }) => {
   return (
     <div className="flex-1 overflow-y-auto p-6">
       <div className="max-w-3xl mx-auto">
@@ -120,16 +121,20 @@ const ChatContent: React.FC = () => {
           <button className="text-gray-600 hover:text-custom px-4 py-2">Doctors</button>
           <button className="text-gray-600 hover:text-custom px-4 py-2">Reports</button>
         </div>
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mb-8">
+          <h2 className="font-semibold mb-4">Gemini Output</h2>
+          <p className="text-gray-600">{geminiOutput}</p>
+        </div>
       </div>
     </div>
   );
 };
 
-const InputArea: React.FC = () => {
+const InputArea: React.FC = ({ onSendMessage }) => {
   const [message, setMessage] = useState('');
 
   const handleSendMessage = async () => {
-    const response = await axios.post('http://localhost:5000/api/chat', { message });
+    await onSendMessage(message);
     setMessage('');
   };
 
@@ -173,13 +178,29 @@ const InputArea: React.FC = () => {
 };
 
 const Chatbot: React.FC = () => {
+  const [geminiOutput, setGeminiOutput] = useState('');
+
+  useEffect(() => {
+    const fetchGeminiOutput = async () => {
+      const response = await axios.get('http://localhost:5000/api/gemini');
+      setGeminiOutput(response.data.output);
+    };
+
+    fetchGeminiOutput();
+  }, []);
+
+  const handleSendMessage = async (message) => {
+    const response = await axios.post('http://localhost:5000/api/chat', { message });
+    setGeminiOutput(response.data.reply);
+  };
+
   return (
     <div className="flex h-screen">
       <Sidebar />
       <div className="flex-1 flex flex-col">
         <Header />
-        <ChatContent />
-        <InputArea />
+        <ChatContent geminiOutput={geminiOutput} />
+        <InputArea onSendMessage={handleSendMessage} />
       </div>
     </div>
   );
