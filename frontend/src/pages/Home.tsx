@@ -213,8 +213,8 @@ const Home: React.FC = () => {
               <a href="#" className="text-gray-600 hover:text-blue-600">
                 Home
               </a>
-              <a href="#" className="text-gray-600 hover:text-blue-600">
-                Categories
+              <a href="/video" className="text-gray-600 hover:text-blue-600">
+                Video Chat
               </a>
               <a href="#" className="text-gray-600 hover:text-blue-600">
                 Prescriptions
