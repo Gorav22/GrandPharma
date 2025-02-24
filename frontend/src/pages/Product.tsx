@@ -12,7 +12,6 @@ interface ProductData {
     product_photo?: string;
     product_price?: string;
     category?: string;
-    // Add other properties as needed
   }
 
 
