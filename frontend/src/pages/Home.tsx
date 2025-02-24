@@ -120,8 +120,6 @@ animation: shake 0.5s ease-in-out;
 `;
 document.head.appendChild(style);
 import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/pagination";
 import { Pagination, Autoplay } from "swiper/modules";
 import { Link } from "react-router-dom";
 const Home: React.FC = () => {

@@ -4,7 +4,6 @@ import Home from "./pages/Home";
 import Chatbot from './pages/Chatbot'
 import './index.css'
 import VideoConference from "./pages/VideoConference";
-import VideoChat from "./pages/Videowithai";
 import Product from "./pages/Product";
 
 const App: React.FC = () => {
@@ -14,7 +13,6 @@ const App: React.FC = () => {
         <Route path="/" element={<Home />} />
         <Route path="/chatbot" element={<Chatbot/>}/>
         <Route path="/video" element={<VideoConference/>}/>
-        {/* <Route path="/videowithai" element={<VideoChat/>}/> */}
         <Route path="/product" element={<Product/>}/>
       </Routes>
     </Router>

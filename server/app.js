@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
 const dotenv = require('dotenv');
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const fetch = require('node-fetch');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 dotenv.config();
@@ -26,16 +26,44 @@ app.use('/api/medicines', require('./routes/medicineRoutes'));
 app.use('/api/orders', require('./routes/orderRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
 
-const GEMINI_API_KEY = 'AIzaSyDHYoUo5WYldZXOMp6cOaS3m3rS-AiR3DA';
-const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+const OPENROUTER_API_KEY = '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'; // Replace with your actual API key
+const SITE_URL = 'http://localhost:5173'; // Replace with your actual site URL
+const SITE_NAME = 'MedChat Assistant'; // Replace with your site name
 
 let chatHistory = [];
 
 app.post('/api/chat', async (req, res) => {
   const { message } = req.body;
   console.log(message);
+  
   try {
+    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
+        "HTTP-Referer": SITE_URL,
+        "X-Title": SITE_NAME,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        // "model": "deepseek/deepseek-r1:free",
+        "model":"deepseek/deepseek-chat:free",
+        "messages": [
+          {
+            "role": "system",
+            "content": "You are an AI doctor assistant. Help users with medical questions. For non-medical questions, politely respond that you can't help with that topic."
+          },
+          {
+            "role": "user",
+            "content": message
+          }
+        ]
+      })
+    });
+    
+    const result = await response.json();
+    const reply = result.choices && result.choices[0] ? result.choices[0].message.content : "Sorry, I couldn't process that request.";
+    
     const prompt="you are a ai doctor, dietician help the user for that anf for other questions just just say sorry i can't help you with that."
     const response = await model.generateContent(prompt+message);
     const reply = response.response.text();
@@ -43,7 +71,7 @@ app.post('/api/chat', async (req, res) => {
     chatHistory.push({ user: message, bot: reply });
     res.json({ reply, history: chatHistory });
   } catch (err) {
-    console.error('Error calling Gemini API:', err);
+    console.error('Error calling OpenRouter API:', err);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
