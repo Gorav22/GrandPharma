@@ -2,13 +2,35 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import '../index.css';
 
+// Define an interface for the chat object
+interface Chat {
+  user: string;
+  bot: string;
+  timestamp: string;
+}
+
+// Define a type for the Gemini output
+interface GeminiOutput {
+  output: string;
+}
+
+// Define a type for the chat response
+interface ChatResponse {
+  reply: string;
+}
+
+// Sidebar Component
 const Sidebar: React.FC = () => {
-  const [history, setHistory] = useState([]);
+  const [history, setHistory] = useState<Chat[]>([]);
 
   useEffect(() => {
     const fetchHistory = async () => {
-      const response = await axios.get('http://localhost:5000/api/history');
-      setHistory(response.data);
+      try {
+        const response = await axios.get<Chat[]>('http://localhost:5000/api/history');
+        setHistory(response.data);
+      } catch (error) {
+        console.error('Error fetching history:', error);
+      }
     };
 
     fetchHistory();
@@ -34,6 +56,7 @@ const Sidebar: React.FC = () => {
             <div key={index} className="mb-4">
               <div className="text-gray-400">You: {chat.user}</div>
               <div className="text-white">Bot: {chat.bot}</div>
+              <div className="text-gray-500 text-xs">{new Date(chat.timestamp).toLocaleString()}</div>
             </div>
           ))}
         </div>
@@ -48,6 +71,7 @@ const Sidebar: React.FC = () => {
   );
 };
 
+// Header Component
 const Header: React.FC = () => {
   return (
     <header className="bg-white border-b border-gray-200 px-6 py-4">
@@ -72,7 +96,12 @@ const Header: React.FC = () => {
   );
 };
 
-const ChatContent: React.FC = ({ geminiOutput }) => {
+// ChatContent Component
+interface ChatContentProps {
+  geminiOutput: string;
+}
+
+const ChatContent: React.FC<ChatContentProps> = ({ geminiOutput }) => {
   return (
     <div className="flex-1 overflow-y-auto p-6">
       <div className="max-w-3xl mx-auto">
@@ -120,23 +149,39 @@ const ChatContent: React.FC = ({ geminiOutput }) => {
           <button className="text-gray-600 hover:text-custom px-4 py-2">Doctors</button>
           <button className="text-gray-600 hover:text-custom px-4 py-2">Reports</button>
         </div>
-        <p className="text-gray-600">{geminiOutput}</p>
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mb-8">
+          <h2 className="font-semibold mb-4">Gemini Output</h2>
+          <p className="text-gray-600">{geminiOutput}</p>
+        </div>
       </div>
     </div>
   );
 };
 
-const InputArea: React.FC = ({ onSendMessage }) => {
+// InputArea Component
+interface InputAreaProps {
+  onSendMessage: (message: string) => Promise<void>;
+}
+
+const InputArea: React.FC<InputAreaProps> = ({ onSendMessage }) => {
   const [message, setMessage] = useState('');
 
   const handleSendMessage = async () => {
-    await onSendMessage(message);
-    setMessage('');
+    if (message.trim()) {
+      await onSendMessage(message);
+      setMessage('');
+    }
   };
 
   const handleVoiceInput = () => {
-    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    recognition.onresult = (event) => {
+    const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      console.error('SpeechRecognition is not supported in this browser.');
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
       setMessage(event.results[0][0].transcript);
     };
     recognition.start();
@@ -164,9 +209,8 @@ const InputArea: React.FC = ({ onSendMessage }) => {
               <i className="fas fa-microphone text-gray-400 hover:text-custom"></i>
             </button>
           </div>
-          <button id="sendButton" className="absolute right-3 top-3 bg-custom text-black p-2 rounded-lg !rounded-button" onClick={handleSendMessage}>
+          <button id="sendButton" className="absolute right-3 top-3 bg-custom text-white p-2 rounded-lg !rounded-button" onClick={handleSendMessage}>
             <i className="fas fa-paper-plane"></i>
-            {/* Send */}
           </button>
         </div>
       </div>
@@ -174,21 +218,30 @@ const InputArea: React.FC = ({ onSendMessage }) => {
   );
 };
 
+// Chatbot Component
 const Chatbot: React.FC = () => {
   const [geminiOutput, setGeminiOutput] = useState('');
 
   useEffect(() => {
     const fetchGeminiOutput = async () => {
-      const response = await axios.get('http://localhost:5000/api/gemini');
-      setGeminiOutput(response.data.output);
+      try {
+        const response = await axios.get<GeminiOutput>('http://localhost:5000/api/gemini');
+        setGeminiOutput(response.data.output);
+      } catch (error) {
+        console.error('Error fetching Gemini output:', error);
+      }
     };
 
     fetchGeminiOutput();
   }, []);
 
-  const handleSendMessage = async (message) => {
-    const response = await axios.post('http://localhost:5000/api/chat', { message });
-    setGeminiOutput(response.data.reply);
+  const handleSendMessage = async (message: string) => {
+    try {
+      const response = await axios.post<ChatResponse>('http://localhost:5000/api/chat', { message });
+      setGeminiOutput(response.data.reply);
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
   };
 
   return (

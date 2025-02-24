@@ -1,8 +1,7 @@
 // The exported code uses Tailwind CSS. Install Tailwind CSS in your dev environment to ensure all styles work.
 import React, { useState, useEffect } from "react";
 import { IoIosSearch } from "react-icons/io";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
-
+import { FaComments } from "react-icons/fa6";
 // Add global styles for animations
 const style = document.createElement("style");
 style.textContent = `
@@ -123,7 +122,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import { Pagination, Autoplay } from "swiper/modules";
-import { Link } from "react-router-dom";
+import * as echarts from "echarts";
 const Home: React.FC = () => {
   const [isNewsletterOpen, setIsNewsletterOpen] = useState<boolean>(false);
   const [isChatOpen, setIsChatOpen] = useState<boolean>(false);
@@ -235,12 +234,9 @@ const Home: React.FC = () => {
               />
               <IoIosSearch className="absolute z-4 right-4 top-3 text-gray-400 hover-bounce"/>
             </div>
-            <SignedOut>
-        <SignInButton />
-      </SignedOut>
-      <SignedIn>
-        <UserButton />
-      </SignedIn>
+            <button className="!rounded-button whitespace-nowrap bg-blue-600 text-white px-6 py-2 hover:bg-blue-700 hover-scale">
+              Sign In
+            </button>
             <div className="relative cursor-pointer hover-bounce">
               <i className="fas fa-shopping-cart text-xl text-gray-600"></i>
               <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center animate-pulse">
@@ -265,9 +261,9 @@ const Home: React.FC = () => {
               <button className="!rounded-button whitespace-nowrap bg-blue-600 text-white px-8 py-3 text-lg hover:bg-blue-700">
                 Shop Medicines
               </button>
-              <Link to='/chatbot'><button className="!rounded-button whitespace-nowrap border-2 border-blue-600 text-blue-600 px-8 py-3 text-lg hover:bg-blue-50">
+              <button className="!rounded-button whitespace-nowrap border-2 border-blue-600 text-blue-600 px-8 py-3 text-lg hover:bg-blue-50">
                 Upload Prescription
-              </button></Link>
+              </button>
             </div>
             <div className="flex items-center mt-12 space-x-8">
               <img
@@ -283,7 +279,7 @@ const Home: React.FC = () => {
               
             </div>
           </div>
-          <div className="w-1/2 z-[1] animate-slideInRight">
+          <div className="w-1/2 animate-slideInRight">
             <Swiper
               modules={[Pagination, Autoplay]}
               pagination={{ clickable: true }}
@@ -295,35 +291,35 @@ const Home: React.FC = () => {
                 <img
                   src="https://public.readdy.ai/ai/img_res/60627c42d7e170913bbbf3ec20de7105.jpg"
                   alt="Modern Pharmacy"
-                  className="w-full z-[-9999] h-full object-cover"
+                  className="w-full h-full object-cover"
                 />
               </SwiperSlide>
               <SwiperSlide>
                 <img
                   src="https://public.readdy.ai/ai/img_res/874179d46787bd7a5e67f32fc7f19f56.jpg"
                   alt="Medical Laboratory"
-                  className="w-full z-[-9999] h-full object-cover"
+                  className="w-full h-full object-cover"
                 />
               </SwiperSlide>
               <SwiperSlide>
                 <img
                   src="https://public.readdy.ai/ai/img_res/c0bec052fcc95bdfb9c9530b370340cd.jpg"
                   alt="Pharmaceutical Warehouse"
-                  className="w-full z-[-9999] h-full object-cover"
+                  className="w-full h-full object-cover"
                 />
               </SwiperSlide>
               <SwiperSlide>
                 <img
                   src="https://public.readdy.ai/ai/img_res/7830281d49fe09a6c148397a0d7762f2.jpg"
                   alt="Telemedicine Consultation"
-                  className="w-full z-[-9999] h-full object-cover"
+                  className="w-full h-full object-cover"
                 />
               </SwiperSlide>
               <SwiperSlide>
                 <img
                   src="https://public.readdy.ai/ai/img_res/668c0003fdba55495c9c763af2c9cafc.jpg"
                   alt="Pharmaceutical Research"
-                  className="w-full z-[-9999] h-full object-cover"
+                  className="w-full h-full object-cover"
                 />
               </SwiperSlide>
             </Swiper>
@@ -366,51 +362,60 @@ const Home: React.FC = () => {
         </div>
       </div>
       {/* Categories Section */}
-      <div className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">
-            Browse by Category
-          </h2>
-          <div className="grid grid-cols-6 gap-6 animate-fadeInUp">
-            {categories.map((category, index) => {
-              const imageQueries = {
-                "drugs.jpg":
-                  "professional product photography of prescription medicine bottles and pills arranged on clean white surface modern pharmaceutical display premium lighting",
-                "OTC Medicines":
-                  "collection of over the counter medicine packages and tablets professionally arranged on white surface clean medical product photography",
-                "Healthcare Products":
-                  "assorted healthcare products including bandages thermometers and first aid supplies professionally arranged on white surface",
-                "Personal Care":
-                  "luxury personal care products including moisturizers serums and cleansers arranged elegantly on white surface premium cosmetic photography",
-                "Vitamins & Supplements":
-                  "premium vitamin and supplement bottles with natural ingredients professional product photography on white surface wellness products",
-                "Medical Devices":
-                  "modern medical devices including blood pressure monitor glucose meter and digital thermometer professional healthcare equipment photography",
-              };
-              return (
-                <div
-                  key={index}
-                  className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
-                >
-                  <div className="h-40 overflow-hidden">
-                    <img
-                    src={category.name}
-                      alt={category.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-semibold text-lg mb-1">
-                      {category.name}
-                    </h3>
-                    <p className="text-gray-600">{category.count} Products</p>
-                  </div>
-                </div>
-              );
-            })}
+<div className="py-20 bg-gray-50">
+  <div className="max-w-7xl mx-auto px-4">
+    <h2 className="text-3xl font-bold text-center mb-12">
+      Browse by Category
+    </h2>
+    <div className="grid grid-cols-6 gap-6 animate-fadeInUp">
+      {categories.map((category, index) => {
+        const imageQueries = {
+          "first.jpeg":
+            "professional product photography of prescription medicine bottles and pills arranged on clean white surface modern pharmaceutical display premium lighting",
+          "OTC Medicines":
+            "collection of over the counter medicine packages and tablets professionally arranged on white surface clean medical product photography",
+          "Healthcare Products":
+            "assorted healthcare products including bandages thermometers and first aid supplies professionally arranged on white surface",
+          "Personal Care":
+            "luxury personal care products including moisturizers serums and cleansers arranged elegantly on white surface premium cosmetic photography",
+          "Vitamins & Supplements":
+            "premium vitamin and supplement bottles with natural ingredients professional product photography on white surface wellness products",
+          "Medical Devices":
+            "modern medical devices including blood pressure monitor glucose meter and digital thermometer professional healthcare equipment photography",
+        };
+
+        const imageMap = {
+          "Prescription Medicines": "first.jpeg",
+          "OTC Medicines":"otc.jpg",
+          "Healthcare Products": "healthcared.jpeg",
+          "Personal Care": "personal.jpeg",
+          "Vitamins & Supplements": "vitamins.jpeg",
+          "Medical Devices": "medical.jpeg",
+        };
+
+        return (
+          <div
+            key={index}
+            className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
+          >
+            <div className="h-40 overflow-hidden">
+              <img
+                src={imageMap[category.name] || "first.jpeg"}
+                alt={category.name}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="p-4">
+              <h3 className="font-semibold text-lg mb-1">{category.name}</h3>
+              <p className="text-gray-600">{category.count} Products</p>
+            </div>
           </div>
-        </div>
-      </div>
+        );
+      })}
+    </div>
+  </div>
+</div>
+
       {/* Special Offers Section */}
       <div className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4">
@@ -587,16 +592,14 @@ const Home: React.FC = () => {
         </div>
       </footer>
       {/* Floating Chat Button */}
-      <Link to='/chatbot'><button
-  onClick={() => setIsChatOpen(!isChatOpen)}
-  className="!rounded-button whitespace-nowrap fixed bottom-8 right-8 z-[9999] bg-blue-600 text-white w-16 h-16 rounded-full shadow-lg flex items-center justify-center hover:bg-blue-700 transition-transform duration-300 hover:scale-110 animate-bounce"
->
-  <i
-    className={`fas ${isChatOpen ? "fa-times" : "fa-comments"} text-2xl`}
-  ></i>
-</button></Link>
-
-
+      <button
+        onClick={() => setIsChatOpen(!isChatOpen)}
+        className="!rounded-button whitespace-nowrap fixed bottom-8 right-8 bg-blue-600 text-white w-16 h-16 rounded-full shadow-lg flex items-center justify-center hover:bg-blue-700 transition-transform duration-300 hover:scale-110 animate-bounce"
+      >
+        <i
+          className={`fas ${isChatOpen ? "fa-times" : "fa-comments"} text-2xl`}
+        ></i>
+      </button>
       {/* Chat Window */}
       {isChatOpen && (
         <div className="fixed bottom-28 right-8 w-96 bg-white rounded-lg shadow-xl">
