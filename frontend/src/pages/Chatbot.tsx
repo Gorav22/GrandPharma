@@ -121,10 +121,7 @@ const ChatContent: React.FC = ({ geminiOutput }) => {
           <button className="text-gray-600 hover:text-custom px-4 py-2">Doctors</button>
           <button className="text-gray-600 hover:text-custom px-4 py-2">Reports</button>
         </div>
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mb-8">
-          <h2 className="font-semibold mb-4">Gemini Output</h2>
-          <p className="text-gray-600">{geminiOutput}</p>
-        </div>
+        <p className="text-gray-600">{geminiOutput}</p>
       </div>
     </div>
   );

@@ -1,8 +1,8 @@
-// server.js
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/db');
 const dotenv = require('dotenv');
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 dotenv.config();
 
@@ -24,32 +24,24 @@ app.use('/api/medicines', require('./routes/medicineRoutes'));
 app.use('/api/orders', require('./routes/orderRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
 
-
-const GEMINI_API_KEY = '';
-const GEMINI_API_URL = 'https://api.gemini.com/v1/chat';
+const GEMINI_API_KEY = 'AIzaSyDHYoUo5WYldZXOMp6cOaS3m3rS-AiR3DA';
+const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
 let chatHistory = [];
 
 app.post('/api/chat', async (req, res) => {
   const { message } = req.body;
-
+  console.log(message);
   try {
-    const response = await axios.post(
-      GEMINI_API_URL,
-      { message },
-      {
-        headers: {
-          'Authorization': `Bearer ${GEMINI_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-
-    const reply = response.data.reply;
+    const prompt="you are a ai doctor help the user for that anf for other questions just just say sorry i can't help you with that."
+    const response = await model.generateContent(prompt+message);
+    const reply = response.response.text();
+    console.log(reply);
     chatHistory.push({ user: message, bot: reply });
     res.json({ reply, history: chatHistory });
-  } catch (error) {
-    console.error('Error calling Gemini API:', error);
+  } catch (err) {
+    console.error('Error calling Gemini API:', err);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
@@ -57,7 +49,6 @@ app.post('/api/chat', async (req, res) => {
 app.get('/api/history', (req, res) => {
   res.json(chatHistory);
 });
-
 
 const PORT = process.env.PORT || 5000;
 
