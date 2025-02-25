@@ -168,7 +168,7 @@ const Home: React.FC = () => {
               </Link>
               <Link to="/chatbot">
                 <button className="!rounded-button whitespace-nowrap border-2 border-blue-600 text-blue-600 px-6 py-3 text-lg hover:bg-blue-50">
-                  Upload Prescription
+                  24/7 Support
                 </button>
               </Link>
             </div>
