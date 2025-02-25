@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-
 import '../index.css';
 
 const genAI = new GoogleGenerativeAI('AIzaSyDHYoUo5WYldZXOMp6cOaS3m3rS-AiR3DA');
@@ -17,8 +16,8 @@ const Chatbot: React.FC = () => {
     setError('');
     try {
       const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
-      const prompt="You are a ai doctor give consultation and basic medicine telling for there health like paracetamol, dolo for headache, aspirin for fever and painkillers for body pain and many more that you know. Only tell about that medicine that is asked";
-      const result = await model.generateContent(prompt+message);
+      const prompt = "You are a ai doctor give consultation and basic medicine telling for their health like paracetamol, dolo for headache, aspirin for fever and painkillers for body pain and many more that you know. Only tell about that medicine that is asked";
+      const result = await model.generateContent(prompt + message);
       const response = await result.response;
       setGeminiOutput(response.text());
     } catch (error) {
@@ -31,7 +30,7 @@ const Chatbot: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen flex-col lg:flex-row">
       <Sidebar />
       <div className="flex-1 flex flex-col">
         <Header />
@@ -43,7 +42,7 @@ const Chatbot: React.FC = () => {
 };
 
 const Sidebar: React.FC = () => (
-  <div className="w-80 bg-gray-900 text-white flex flex-col">
+  <div className="w-full lg:w-80 bg-gray-900 text-white flex flex-col">
     <div className="p-4 border-b border-gray-800">
       <div className="flex items-center gap-2">
         <img src="https://ai-public.creatie.ai/gen_page/logo_placeholder.png" alt="Logo" className="w-8 h-8" />
@@ -69,7 +68,7 @@ const ChatContent: React.FC<{ geminiOutput: string; loading: boolean; error: str
         <h1 className="text-3xl font-bold mb-2">Your Medical Assistant</h1>
         <p className="text-gray-600">Get instant answers about medications, symptoms, and medical advice. Please note: This is for informational purposes only and not a substitute for professional medical advice.</p>
       </div>
-      <div className="grid grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:border-custom transition-colors">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 rounded-lg bg-custom/10">
@@ -114,7 +113,7 @@ const ChatContent: React.FC<{ geminiOutput: string; loading: boolean; error: str
 );
 
 const InputArea: React.FC<{ message: string; setMessage: (msg: string) => void; handleSendMessage: () => void; loading: boolean }> = ({ message, setMessage, handleSendMessage, loading }) => (
-  <div className="bg-white border-t p-4 flex">
+  <div className="bg-white border-t p-4 flex flex-wrap gap-2">
     <input
       type="text"
       placeholder="Ask about medical advice..."
