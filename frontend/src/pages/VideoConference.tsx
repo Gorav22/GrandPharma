@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 const VideoConference: React.FC = () => {
 const [showModal, setShowModal] = useState(false);
 const handleOpenModal = () => {
@@ -81,10 +82,10 @@ className="w-full h-full object-cover"
 </div>
 <h4 className="text-xl font-semibold mb-2">AI Virtual Assistant</h4>
 <p className="text-gray-600 mb-4">24/7 instant medical guidance powered by advanced AI. Get quick answers and initial assessments.</p>
-<button className="!rounded-button bg-blue-600 text-white px-6 py-3 w-full font-medium hover:bg-blue-700 transition-colors duration-200 whitespace-nowrap">
+<Link to='/chatbot'><button className="!rounded-button bg-blue-600 text-white px-6 py-3 w-full font-medium hover:bg-blue-700 transition-colors duration-200 whitespace-nowrap">
 <i className="fas fa-robot mr-2"></i>
 Start AI Consultation
-</button>
+</button></Link>
 </div>
 {/* Doctor Option */}
 <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 hover:shadow-lg transition-shadow duration-200">
