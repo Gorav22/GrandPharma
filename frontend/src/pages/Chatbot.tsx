@@ -16,7 +16,7 @@ const Chatbot: React.FC = () => {
     setError('');
     try {
       const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
-      const prompt = "You are a ai doctor give consultation and basic medicine telling for their health like paracetamol, dolo for headache, aspirin for fever and painkillers for body pain and many more that you know. Only tell about that medicine that is asked";
+      const prompt = "You are a ai doctor give consultation and basic medicine telling for their health like paracetamol, dolo for headache, aspirin for fever and painkillers for body pain and many more that you know. Only tell about that medicine that is asked. and for other questions just refuge";
       const result = await model.generateContent(prompt + message);
       const response = await result.response;
       setGeminiOutput(response.text());
