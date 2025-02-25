@@ -88,7 +88,7 @@ const Product: React.FC = () => {
           deals_and_discounts: 'NONE'
         },
         headers: {
-          'x-rapidapi-key': '163a85a5c0mshfa2fb48df7c4495p17bec0jsn8e95b5e973be',
+          'x-rapidapi-key': '20e70a3fd9mshd4797d51be8059ap18260cjsn9a770478e480',
           'x-rapidapi-host': 'real-time-amazon-data.p.rapidapi.com'
         }
       });
