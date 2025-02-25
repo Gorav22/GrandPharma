@@ -272,12 +272,12 @@ const Product: React.FC = () => {
                         <span className="text-lg font-semibold">{product.product_price}</span>
                         <span className="ml-2 text-sm text-gray-500 line-through">USD {product.product_price}</span>
                       </div>
-                      <button
+                      <a href='https://buy.stripe.com/test_00g18b3kf40K5dm4gg'><button
                         onClick={handleAddToCart}
                         className="bg-sky-500 text-white px-4 py-2 rounded-lg hover:bg-sky-600 transition-all transform hover:scale-105 active:scale-95 whitespace-nowrap text-sm"
                       >
-                        ADD
-                      </button>
+                       BUY
+                      </button></a>
                     </div>
                   </div>
                 </div>
