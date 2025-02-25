@@ -112,25 +112,35 @@ const ChatContent: React.FC<{ geminiOutput: string; loading: boolean; error: str
   </div>
 );
 
-const InputArea: React.FC<{ message: string; setMessage: (msg: string) => void; handleSendMessage: () => void; loading: boolean }> = ({ message, setMessage, handleSendMessage, loading }) => (
-  <div className="bg-white border-t p-4 flex flex-wrap gap-2">
-    <input
-      type="text"
-      placeholder="Ask about medical advice..."
-      className="flex-1 border rounded-lg px-4 py-2"
-      value={message}
-      onChange={(e) => setMessage(e.target.value)}
-      aria-label="Input your medical query"
-    />
-    <button
-      className="ml-2 bg-blue-600 text-white px-4 py-2 rounded-lg"
-      onClick={handleSendMessage}
-      disabled={loading}
-      aria-label="Send message"
-    >
-      {loading ? 'Sending...' : 'Send'}
-    </button>
-  </div>
-);
+const InputArea: React.FC<{ message: string; setMessage: (msg: string) => void; handleSendMessage: () => void; loading: boolean }> = ({ message, setMessage, handleSendMessage, loading }) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSendMessage();
+    }
+  };
+
+  return (
+    <div className="bg-white border-t p-4 flex flex-wrap gap-2">
+      <input
+        type="text"
+        placeholder="Ask about medical advice..."
+        className="flex-1 border rounded-lg px-4 py-2"
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        onKeyDown={handleKeyDown} // Add this line to handle Enter key press
+        aria-label="Input your medical query"
+      />
+      <button
+        className="ml-2 bg-blue-600 text-white px-4 py-2 rounded-lg"
+        onClick={handleSendMessage}
+        disabled={loading}
+        aria-label="Send message"
+      >
+        {loading ? 'Sending...' : 'Send'}
+      </button>
+    </div>
+  );
+};
+
 
 export default Chatbot;
