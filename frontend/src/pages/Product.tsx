@@ -4,7 +4,6 @@ import { Autoplay } from 'swiper/modules';
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
 import axios from 'axios';
 
-// Define the type for the product data
 interface Product {
   asin: string;
   product_photo: string;
@@ -107,9 +106,7 @@ const Product: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <header
-        className={`bg-sky-500 text-white fixed w-full z-50 transition-transform duration-300 ${
-          isHeaderVisible ? 'translate-y-0' : '-translate-y-full'
-        }`}
+        className={`bg-sky-500 text-white fixed w-full z-50 transition-transform duration-300 ${isHeaderVisible ? 'translate-y-0' : '-translate-y-full'}`}
       >
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
@@ -156,11 +153,7 @@ const Product: React.FC = () => {
           <nav className="flex items-center space-x-8 py-3">
             {['Medicine', 'Wellness', 'Beauty', 'Health Corner'].map((item, index) => (
               <div key={index} className="flex items-center text-sm cursor-pointer hover:text-sky-200 transition-colors">
-                <i className={`fas fa-${
-                  item === 'Medicine' ? 'pills' :
-                  item === 'Wellness' ? 'spa' :
-                  item === 'Beauty' ? 'heart' : 'book-medical'
-                } mr-2`}></i>
+                <i className={`fas fa-${item === 'Medicine' ? 'pills' : item === 'Wellness' ? 'spa' : item === 'Beauty' ? 'heart' : 'book-medical'} mr-2`}></i>
                 {item}
               </div>
             ))}
@@ -174,7 +167,7 @@ const Product: React.FC = () => {
             <Swiper
               modules={[Autoplay]}
               spaceBetween={24}
-              slidesPerView={8}
+              slidesPerView={4}
               loop={true}
               speed={2000}
               autoplay={{
@@ -196,9 +189,9 @@ const Product: React.FC = () => {
         </div>
       </div>
       <main className="container mx-auto px-4 py-6">
-        <div className="flex">
-          <div className="w-64 flex-shrink-0">
-            <div className="bg-white rounded-lg shadow p-4 mb-4 transform transition-all hover:shadow-lg">
+        <div className="flex flex-col md:flex-row">
+          <div className="w-full md:w-64 flex-shrink-0 mb-4 md:mb-0">
+            <div className="bg-white rounded-lg shadow p-4">
               <h2 className="text-lg font-semibold mb-4">Filters</h2>
               <div className="space-y-4">
                 <div>
@@ -228,7 +221,7 @@ const Product: React.FC = () => {
               </div>
             </div>
           </div>
-          <div className="flex-1 ml-6">
+          <div className="flex-1 ml-0 md:ml-6">
             <div className="flex justify-between items-center mb-6">
               <h1 className="text-xl font-semibold">Featured Products</h1>
               <div className="flex items-center space-x-4">
@@ -243,7 +236,7 @@ const Product: React.FC = () => {
                 ))}
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {data.length > 0 && data.map((product) => (
                 <div
                   key={product.asin}
@@ -272,12 +265,14 @@ const Product: React.FC = () => {
                         <span className="text-lg font-semibold">{product.product_price}</span>
                         <span className="ml-2 text-sm text-gray-500 line-through">USD {product.product_price}</span>
                       </div>
-                      <a href='https://buy.stripe.com/test_00g18b3kf40K5dm4gg'><button
-                        onClick={handleAddToCart}
-                        className="bg-sky-500 text-white px-4 py-2 rounded-lg hover:bg-sky-600 transition-all transform hover:scale-105 active:scale-95 whitespace-nowrap text-sm"
-                      >
-                       BUY
-                      </button></a>
+                      <a href='https://buy.stripe.com/test_00g18b3kf40K5dm4gg'>
+                        <button
+                          onClick={handleAddToCart}
+                          className="bg-sky-500 text-white px-4 py-2 rounded-lg hover:bg-sky-600 transition-all transform hover:scale-105 active:scale-95 whitespace-nowrap text-sm"
+                        >
+                          BUY
+                        </button>
+                      </a>
                     </div>
                   </div>
                 </div>
